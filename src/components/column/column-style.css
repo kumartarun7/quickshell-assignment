@@ -1,0 +1,9 @@
+.main{
+    display: flex;
+    justify-content: space-between;
+    width: 250px;
+}
+
+.top{
+    margin: 23px;
+}

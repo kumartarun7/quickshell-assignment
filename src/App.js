@@ -1,6 +1,5 @@
 import './App.css';
 import React, { useEffect, useState } from 'react';
-import Navbar from './components/navbar/Navbar';
 import Column from './components/column/Column';
 
 function App() {

@@ -34,10 +34,10 @@ const Column = ({ groupBy, name, tickets, sortFunction }) => {
 
 
   const statusImages = {
-    'Backlog': 'assets/backlog.svg',
+    'Backlog': 'assets/Backlog.svg',
     'Todo': 'assets/To-do.svg',
     'In progress': 'assets/in-progress.svg',
-    'Done': 'assets/done.svg',
+    'Done': 'assets/Done.svg',
     'Canceled': 'assets/Cancelled.svg',
   };
 

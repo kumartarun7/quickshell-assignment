@@ -1,0 +1,27 @@
+.popup {
+    position: absolute;
+    top: 60px;
+    left: 0;
+    background-color: #faf6fa;
+    padding: 15px;
+    border: 0px solid;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    z-index: 100;
+    width: 200px;
+    color: #c2c4c5;
+  }
+  
+  .options-container {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .options-container div {
+    margin-bottom: 10px;
+  }
+  
+  .options-container label {
+    margin-right: 10px;
+  }
+  

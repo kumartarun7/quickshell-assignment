@@ -1,14 +1,16 @@
+// App.js
 import './App.css';
 import React, { useEffect, useState } from 'react';
 import Column from './components/column/Column';
+import Popup from './components/popup/Popup'; 
 
 function App() {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [groupBy, setGroupBy] = useState(localStorage.getItem('groupBy') || 'priority'); // Load from localStorage
-  const [sortOption, setSortOption] = useState(localStorage.getItem('sortOption') || 'priority'); // Load from localStorage
-  const [showPopup, setShowPopup] = useState(false); 
+  const [groupBy, setGroupBy] = useState(localStorage.getItem('groupBy') || 'priority');
+  const [sortOption, setSortOption] = useState(localStorage.getItem('sortOption') || 'priority');
+  const [showPopup, setShowPopup] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -29,7 +31,6 @@ function App() {
     fetchData();
   }, []);
 
-  // Save groupBy and sortOption to localStorage whenever they change
   useEffect(() => {
     localStorage.setItem('groupBy', groupBy);
     localStorage.setItem('sortOption', sortOption);
@@ -41,9 +42,9 @@ function App() {
   const sortTickets = (tickets) => {
     return tickets.sort((a, b) => {
       if (sortOption === 'priority') {
-        return b.priority - a.priority; 
+        return b.priority - a.priority;
       } else if (sortOption === 'title') {
-        return a.title.localeCompare(b.title); 
+        return a.title.localeCompare(b.title);
       }
       return 0;
     });
@@ -52,12 +53,12 @@ function App() {
   const groupByUser = (tickets) => {
     const userGroups = {};
     data.users.forEach(user => {
-      userGroups[user.id] = { name: user.name, tickets: [] }; // Initialize user group
+      userGroups[user.id] = { name: user.name, tickets: [] };
     });
 
     tickets.forEach(ticket => {
       if (userGroups[ticket.userId]) {
-        userGroups[ticket.userId].tickets.push(ticket); // Push ticket to corresponding user
+        userGroups[ticket.userId].tickets.push(ticket);
       }
     });
 
@@ -70,12 +71,12 @@ function App() {
       'Todo': [],
       'In progress': [],
       'Done': [],
-      'Canceled': []  
+      'Canceled': []
     };
 
     tickets.forEach(ticket => {
       if (statusGroups[ticket.status]) {
-        statusGroups[ticket.status].push(ticket); 
+        statusGroups[ticket.status].push(ticket);
       }
     });
 
@@ -89,7 +90,6 @@ function App() {
   } else if (groupBy === 'status') {
     groupedTickets = groupByStatus(data.tickets);
   } else {
-    // Group tickets by priority
     groupedTickets = {
       0: sortTickets(data.tickets.filter(ticket => ticket.priority === 0)),
       1: sortTickets(data.tickets.filter(ticket => ticket.priority === 1)),
@@ -110,54 +110,27 @@ function App() {
           </button>
         </div>
 
-        {showPopup && (
-          <div className="popup">
-            {/* Grouping and Sorting menus in a single column */}
-            <div className="options-container">
-              <div style={{display:'flex',justifyContent:'space-between'}}>
-                <label htmlFor="group">Grouping:</label>
-                <select
-                  id="group"
-                  value={groupBy}
-                  onChange={(e) => {
-                    setGroupBy(e.target.value);
-                    setSortOption('priority'); // Reset sort option when changing grouping
-                  }}
-                >
-                  <option value="priority">Priority</option>
-                  <option value="user">User</option>
-                  <option value="status">Status</option>
-                </select>
-              </div>
-
-              {/* Sorting menu */}
-              <div style={{display:'flex',justifyContent:'space-between'}}>
-                <label htmlFor="sort">Ordering:</label>
-                <select
-                  id="sort"
-                  value={sortOption}
-                  onChange={(e) => setSortOption(e.target.value)}
-                >
-                  <option value="priority">Priority</option>
-                  <option value="title">Title</option>
-                </select>
-              </div>
-            </div>
-          </div>
-        )}
+        {/* Use the Popup component */}
+        <Popup
+          showPopup={showPopup}
+          setShowPopup={setShowPopup}
+          groupBy={groupBy}
+          setGroupBy={setGroupBy}
+          sortOption={sortOption}
+          setSortOption={setSortOption}
+        />
       </div>
 
       <div className='head'>
         {groupBy === 'user' ? (
-          // Render columns for each user
           Object.keys(groupedTickets).map(userId => (
             <Column
               key={userId}
               groupBy={groupBy}
-              name={groupedTickets[userId].name} // User name
-              tickets={groupedTickets[userId].tickets} // User's tickets
-              sortFunction={sortTickets} // Sorting function
-              sortOption={sortOption} // Sorting option (priority or title)
+              name={groupedTickets[userId].name}
+              tickets={groupedTickets[userId].tickets}
+              sortFunction={sortTickets}
+              sortOption={sortOption}
             />
           ))
         ) : groupBy === 'status' ? (
@@ -165,22 +138,21 @@ function App() {
             <Column
               key={status}
               groupBy={groupBy}
-              name={status} // Status name
-              tickets={groupedTickets[status]} // Tickets for this status
-              sortFunction={sortTickets} // Sorting function
-              sortOption={sortOption} // Sorting option (priority or title)
+              name={status}
+              tickets={groupedTickets[status]}
+              sortFunction={sortTickets}
+              sortOption={sortOption}
             />
           ))
         ) : (
-          // Render columns for each priority
           Object.keys(groupedTickets).map((priority) => (
             <Column
               key={priority}
               groupBy={groupBy}
-              name={priority} // Priority name
-              tickets={groupedTickets[priority]} // Tickets for this priority
-              sortFunction={sortTickets} // Sorting function
-              sortOption={sortOption} // Sorting option (priority or title)
+              name={priority}
+              tickets={groupedTickets[priority]}
+              sortFunction={sortTickets}
+              sortOption={sortOption}
             />
           ))
         )}
